@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Placement Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --brand-purple: #7b5cfa;
+            --bg-color: #f9fafb; 
+            --border-color: #e5e7eb;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-main);
+            padding-top: 50px;
+            padding-bottom: 60px;
+        }
+
+        .admin-header {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        
+
+        .stat-icon {
+            background-color: #f0ecfc; 
+            color: var(--brand-purple);
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+        th {
+  text-align: center;
+}
+td {
+  text-align: center;
+}
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+        .data-card {
+            background: #ffffff;
+            border: 1px solid ;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); 
+        }
+
+        /* Status Badge */
+        .status-badge {
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 6px 12px;
+            border-radius: 50rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h2 class="admin-header mb-1">Admin Control Center</h2>
+            <p class="text-muted mb-0">Overview of Placement sessions and pending approvals.</p>
+        </div>
+        <a href="/login" class="btn btn-white border shadow-sm fw-bold text-dark rounded-pill px-4 py-2">Log out</a>
+    </div>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #e0f2fe; color: #0284c7;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-number">{{ total_students }}</div>
+                    <p class="stat-label">Total Students</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #f3e8ff; color: #9333ea;">
+                    <i class="bi bi-buildings-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-number">{{ total_companies }}</div>
+                    <p class="stat-label">Total Companies</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #dcfce7; color: #16a34a;">
+                    <i class="bi bi-briefcase-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-number">{{ total_jobs }}</div>
+                    <p class="stat-label">Placement Drives</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #ffedd5; color: #ea580c;">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-number">{{ total_apps }}</div>
+                    <p class="stat-label">Job Applications</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0 text-dark">Company Approvals</h4>
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">
+            {{ pending_companies }} Pending
+        </span>
+    </div>
+
+<table class="table table-hover">
+             <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Company Name</th>
+                        <th>Email Contact</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in pending %}
+                    <tr>
+                        <td class="text-muted fw-medium">#{{ i.id }}</td>
+                        <td class="fw-bold">{{ i.name }}</td>
+                        <td class="text-secondary">{{ i.email }}</td>
+                        <td>
+                            <span class="status-badge">
+                                <i class="bi bi-hourglass-split"></i> {{ i.status }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+    <form method="POST" action="/admin/approve/{{ i.id }}" class="d-inline m-0">
+        <button type="submit" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3">Approve</button>
+    </form>
+    <form method="POST" action="/admin/reject/{{ i.id }}" class="d-inline m-0 ms-1">
+        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold rounded-pill px-3">Reject</button>
+    </form>
+</td>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <div class="display-6 mb-3"><i class="bi bi-check2-circle text-success opacity-50"></i></div>
+                            <h5 class="fw-bold text-dark mb-1">All caught up!</h5>
+                            <p class="mb-0">No companies are currently waiting for approval.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+<div class="d-flex justify-content-between align-items-center mb-3 mt-5">
+        <h4 class="fw-bold mb-0 text-dark">Job Posting Approvals</h4>
+    </div>
+
+    <div class="data-card mb-5">
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle">
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Company</th>
+                        <th>Job Title</th>
+                        <th>Salary</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for j in pending_jobs %}
+                    <tr>
+                        <td class="text-muted fw-medium">#{{ j.id }}</td>
+                        <td class="fw-bold">{{ j.company_name }}</td>
+                        <td class="text-secondary">{{ j.title }}</td>
+                        <td class="text-success fw-bold">{{ j.salary }}</td>
+                        <td class="text-end">
+                            <form method="POST" action="/admin/approve_job/{{ j.id }}" class="d-inline m-0">
+                                <button type="submit" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3">Approve</button>
+                            </form>
+                            <form method="POST" action="/admin/reject_job/{{ j.id }}" class="d-inline m-0 ms-1">
+                                <button type="submit" class="btn btn-sm btn-outline-danger fw-bold rounded-pill px-3">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <div class="display-6 mb-3"><i class="bi bi-briefcase text-success opacity-50"></i></div>
+                            <h5 class="fw-bold text-dark mb-1">No pending jobs!</h5>
+                            <p class="mb-0">All job postings have been reviewed.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
