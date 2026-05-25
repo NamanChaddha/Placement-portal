@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Company Dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #3216a1; 
+        color: #333;
+        padding: 20px;
+        line-height: 1.6;
+    }
+.container{
+     background-color: #ffffff;
+     margin-top: 50px;
+     border-radius: 20px;
+     font-family:"Times New Roman", Times, serif ;
+     border:500px;
+    box-shadow: 0 2px 50px #000000;
+
+}
+.container-body{
+    margin-top: 50px;
+}
+</style>
+</head>
+
+ <body>
+
+<div class="container mt-5" >
+    <div class="container-body mt-50" >
+
+    <h2 class="mb-4">Welcome to the Company Dashboard,{{ name }}!</h2>
+    <div class="card mb-4">
+        <div class="card-body" border-radius:20px>
+            <h4 class="card-title">Post a New Job</h4>
+            <form method="POST" action="{{ url_for('post_job') }}">
+                
+                <div class="mb-3">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Job Description</label>
+                    <textarea name="description" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Salary</label>
+                    <input type="text" name="salary" class="form-control" required>
+                </div>
+                <div class="mb-3">
+    <label class="form-label fw-bold">Minimum CGPA</label>
+    <input type="number" step="0.1" min="0" max="10" name="min_cgpa" class="form-control" placeholder="e.g. 7.5" required>
+</div>
+
+<div class="mb-3">
+    <label class="form-label fw-bold d-block">Eligible Branches</label>
+    
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_branches" value="CSE" id="branchCSE">
+        <label class="form-check-label" for="branchCSE">CSE</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_branches" value="IT" id="branchIT">
+        <label class="form-check-label" for="branchIT">IT</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_branches" value="ECE" id="branchECE">
+        <label class="form-check-label" for="branchECE">ECE</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_branches" value="MECH" id="branchMECH">
+        <label class="form-check-label" for="branchMECH">MECH</label>
+    </div>
+    </div>
+
+<div class="mb-3">
+    <label class="form-label fw-bold d-block">Eligible Degrees</label>
+    
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_degrees" value="BTech" id="degBtech">
+        <label class="form-check-label" for="degBtech">BTech</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_degrees" value="MTech" id="degMtech">
+        <label class="form-check-label" for="degMtech">MTech</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_degrees" value="MBA" id="degMba">
+        <label class="form-check-label" for="degMba">MBA</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="eligible_degrees" value="BCA" id="degBca">
+        <label class="form-check-label" for="degBca">BCA</label>
+    </div>
+    </div>
+
+<div class="mb-3">
+    <label class="form-label fw-bold">Number of Openings</label>
+    <input type="number" min="1" name="openings" class="form-control" placeholder="e.g. 5" required>
+</div>
+                <button type="submit" class="btn btn-primary">Publish Job</button>
+            </form>
+        </div>
+    </div>
+</div>
+    <h4>Your Active Jobs</h4>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for j in jobs %}
+        <tr>
+            <td>{{ j.id }}</td>
+            <td>{{ j.title }}</td>
+            <td>{{ j.description }}</td>
+            <td>{{ j.salary }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">No jobs posted yet.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="mt-5">Student Applications Inbox</h4>
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th>App ID</th>
+                <th>Job ID</th>
+                <th>Student ID</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.id }}</td>
+            <td>{{ app.job_id }}</td>
+            <td>{{ app.student_id }}</td>
+            <td>{{ app.status }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_application', app_id=app.id, new_status='Accepted') }}" class="d-inline">
+                    <button class="btn btn-success btn-sm">Accept</button>
+                </form>
+                
+                <form method="POST" action="{{ url_for('update_application', app_id=app.id, new_status='Rejected') }}" class="d-inline">
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center">No applications yet.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/login" class="btn btn-secondary">Log out</a>
+
+</div>
+
+</body>
+     
+
+</html>
