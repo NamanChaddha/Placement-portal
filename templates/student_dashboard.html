@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="text-bg-primary p-3"> 
+        <h2 class="mb-0">Welcome, {{ name }}! <i class="bi bi-emoji-smile"></i></h2>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card text-bg-light mb-3" style="max-width: auto;">
+            <div class="card-header fw-bold">Job Board</div>
+            <div class="card-body">
+                <p>Here are the latest job opportunities for our college.</p>
+                <table class="table table-hover table-bordered border-secondary align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Company</th>
+                            <th>Job Title</th>
+                            <th>Description</th>
+                            <th>Salary</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for j in jobs %}
+                        <tr>
+                            <td class="fw-bold">{{j.company_name}}</td>
+                            <td>{{j.title}}</td>
+                            <td>{{j.description}}</td>
+                            <td class="text-success fw-bold">{{j.salary}}</td>
+                            <td>
+                                {% if j.id in application_statuses %}
+                                    
+                                    {% set status = application_statuses[j.id] %}
+                                    
+                                    {% if status == 'Accepted' %}
+                                        <span class="badge bg-success "><i class="bi bi-check-circle"></i> Accepted</span>
+                                        
+                                    {% elif status == 'Rejected' %}
+                                        <span class="badge bg-danger "><i class="bi bi-x-circle"></i> Rejected</span>
+                                        
+                                    {% else %}
+                                        <span class="badge bg-warning "><i class="bi bi-hourglass-split"></i> Pending</span>
+                                    {% endif %}
+                                    
+                                {% else %}
+                                    <form method="POST" action="/student/apply/{{j.id}}" class="m-0">
+{% if application_statuses.get(j.id) %}
+    <button class="btn btn-secondary" disabled>
+        Status: {{ application_statuses.get(j.id) }}
+    </button>
+{% else %}
+    <form method="POST" action="/student/apply/{{ j.id }}" class="d-inline">
+        <button type="submit" class="btn btn-primary">Apply Now</button>
+    </form>
+{% endif %}                                    </form>
+                                {% endif %}
+    </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">No jobs have been posted yet. Check back later!</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="/login" class="btn btn-outline-secondary mt-2">Log out</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
