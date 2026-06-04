@@ -1,2 +1,2 @@
-*.html linguist-documentation=true
-*.py linguist-detectable=true
+*.py linguist-language=Python
+*.html linguist-language=HTML
