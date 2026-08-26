@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session,fl
 from flask_mail import Mail, Message
 from celery import Celery
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt 
 
 app= Flask(__name__)
 app.secret_key = 'super_secret_placement_key'
