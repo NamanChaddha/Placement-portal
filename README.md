@@ -60,6 +60,7 @@ A robust, full-stack web application designed to streamline the campus recruitme
         </ul>
     </li>
 </ul>
+<img width="939" height="512" alt="image" src="https://github.com/user-attachments/assets/c20c12a9-f9e7-4a35-83b3-f96936483652" />
 
 <h2>Core API Endpoints</h2>
 <table border="1">
